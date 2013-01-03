@@ -5,6 +5,7 @@ import java.awt.event.InputEvent;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.gui.cad.CADStatus;
 import com.iver.cit.gvsig.gui.cad.tools.CutPolygonCADTool;
+import com.iver.cit.gvsig.gui.cad.tools.CutRedigitalizeCommons;
 
 /**
  * @author José Ignacio Lamas Fonte [LBD]
@@ -13,13 +14,9 @@ import com.iver.cit.gvsig.gui.cad.tools.CutPolygonCADTool;
  */
 
 public final class CutPolygonCADToolContext extends statemap.FSMContext {
-    // ---------------------------------------------------------------
-    // Member methods.
-    //
 
     public CutPolygonCADToolContext(CutPolygonCADTool owner) {
 	super();
-
 	_owner = owner;
 	setState(CutPolygon.FirstPoint);
 	CutPolygon.FirstPoint.Entry(this);
@@ -59,20 +56,9 @@ public final class CutPolygonCADToolContext extends statemap.FSMContext {
 	return (_owner);
     }
 
-    // ---------------------------------------------------------------
-    // Member data.
-    //
-
     transient private CutPolygonCADTool _owner;
 
-    // ---------------------------------------------------------------
-    // Inner classes.
-    //
-
     public static abstract class CutPolygonCADToolState extends statemap.State {
-	// -----------------------------------------------------------
-	// Member methods.
-	//
 
 	protected CutPolygonCADToolState(String name, int id) {
 	    super(name, id);
@@ -103,27 +89,12 @@ public final class CutPolygonCADToolContext extends statemap.FSMContext {
 		    + context.getState().getName() + ", Transition: "
 		    + context.getTransition()));
 	}
-
-	// -----------------------------------------------------------
-	// Member data.
-	//
     }
 
-    /* package */static abstract class CutPolygon {
-	// -----------------------------------------------------------
-	// Member methods.
-	//
-
-	// -----------------------------------------------------------
-	// Member data.
-	//
-
-	// -------------------------------------------------------
-	// Statics.
-	//
-	/* package */static CutPolygon_Default.CutPolygon_FirstPoint FirstPoint;
-	/* package */static CutPolygon_Default.CutPolygon_SecondPoint SecondPoint;
-	/* package */static CutPolygon_Default.CutPolygon_NextPoint NextPoint;
+    static abstract class CutPolygon {
+	static CutPolygon_Default.CutPolygon_FirstPoint FirstPoint;
+	static CutPolygon_Default.CutPolygon_SecondPoint SecondPoint;
+	static CutPolygon_Default.CutPolygon_NextPoint NextPoint;
 	private static CutPolygon_Default Default;
 
 	static {
@@ -139,9 +110,6 @@ public final class CutPolygonCADToolContext extends statemap.FSMContext {
     }
 
     protected static class CutPolygon_Default extends CutPolygonCADToolState {
-	// -----------------------------------------------------------
-	// Member methods.
-	//
 
 	protected CutPolygon_Default(String name, int id) {
 	    super(name, id);
@@ -150,7 +118,7 @@ public final class CutPolygonCADToolContext extends statemap.FSMContext {
 	@Override
 	protected void addPoint(CutPolygonCADToolContext context,
 		double pointX, double pointY, InputEvent event) {
-	    CutPolygonCADTool ctxt = context.getOwner();
+	    CutRedigitalizeCommons ctxt = context.getOwner();
 
 	    boolean loopbackFlag = context.getState().getName()
 		    .equals(CutPolygon.FirstPoint.getName());
@@ -178,7 +146,7 @@ public final class CutPolygonCADToolContext extends statemap.FSMContext {
 	@Override
 	protected void removePoint(CutPolygonCADToolContext context,
 		InputEvent event, int numPoints) {
-	    CutPolygonCADTool ctxt = context.getOwner();
+	    CutRedigitalizeCommons ctxt = context.getOwner();
 
 	    boolean loopbackFlag = context.getState().getName()
 		    .equals(CutPolygon.FirstPoint.getName());
@@ -204,7 +172,7 @@ public final class CutPolygonCADToolContext extends statemap.FSMContext {
 
 	@Override
 	protected void addOption(CutPolygonCADToolContext context, String s) {
-	    CutPolygonCADTool ctxt = context.getOwner();
+	    CutRedigitalizeCommons ctxt = context.getOwner();
 
 	    if (s.equals("C") || s.equals("c")
 		    || s.equals(PluginServices.getText(this, "cancel"))) {
@@ -241,15 +209,8 @@ public final class CutPolygonCADToolContext extends statemap.FSMContext {
 	    return;
 	}
 
-	// -----------------------------------------------------------
-	// Inner classse.
-	//
-
 	private static final class CutPolygon_FirstPoint extends
 		CutPolygon_Default {
-	    // -------------------------------------------------------
-	    // Member methods.
-	    //
 
 	    private CutPolygon_FirstPoint(String name, int id) {
 		super(name, id);
@@ -257,7 +218,7 @@ public final class CutPolygonCADToolContext extends statemap.FSMContext {
 
 	    @Override
 	    protected void Entry(CutPolygonCADToolContext context) {
-		CutPolygonCADTool ctxt = context.getOwner();
+		CutRedigitalizeCommons ctxt = context.getOwner();
 
 		ctxt.setQuestion(PluginServices.getText(this,
 			"redigitaliza_insert_first_point"));
@@ -268,7 +229,7 @@ public final class CutPolygonCADToolContext extends statemap.FSMContext {
 	    @Override
 	    protected void addPoint(CutPolygonCADToolContext context,
 		    double pointX, double pointY, InputEvent event) {
-		CutPolygonCADTool ctxt = context.getOwner();
+		CutRedigitalizeCommons ctxt = context.getOwner();
 
 		if (ctxt.pointInsideFeature(pointX, pointY)) {
 
@@ -293,17 +254,10 @@ public final class CutPolygonCADToolContext extends statemap.FSMContext {
 
 		return;
 	    }
-
-	    // -------------------------------------------------------
-	    // Member data.
-	    //
 	}
 
 	private static final class CutPolygon_SecondPoint extends
 		CutPolygon_Default {
-	    // -------------------------------------------------------
-	    // Member methods.
-	    //
 
 	    private CutPolygon_SecondPoint(String name, int id) {
 		super(name, id);
@@ -312,7 +266,7 @@ public final class CutPolygonCADToolContext extends statemap.FSMContext {
 	    @Override
 	    protected void Entry(CutPolygonCADToolContext context) {
 
-		CutPolygonCADTool tool = context.getOwner();
+		CutRedigitalizeCommons tool = context.getOwner();
 		tool.setDescription(new String[] { "cancel" });
 		boolean deleteButton3 = CADStatus.getCADStatus()
 			.isDeleteButtonActivated();
@@ -329,7 +283,7 @@ public final class CutPolygonCADToolContext extends statemap.FSMContext {
 	    @Override
 	    protected void addPoint(CutPolygonCADToolContext context,
 		    double pointX, double pointY, InputEvent event) {
-		CutPolygonCADTool ctxt = context.getOwner();
+		CutRedigitalizeCommons ctxt = context.getOwner();
 
 		if (ctxt.secondPointInsideFeature(pointX, pointY)) {
 
@@ -356,7 +310,7 @@ public final class CutPolygonCADToolContext extends statemap.FSMContext {
 	    @Override
 	    protected void removePoint(CutPolygonCADToolContext context,
 		    InputEvent event, int numPoints) {
-		CutPolygonCADTool ctxt = context.getOwner();
+		CutRedigitalizeCommons ctxt = context.getOwner();
 
 		(context.getState()).Exit(context);
 		context.clearState();
@@ -369,16 +323,10 @@ public final class CutPolygonCADToolContext extends statemap.FSMContext {
 		return;
 	    }
 
-	    // -------------------------------------------------------
-	    // Member data.
-	    //
 	}
 
 	private static final class CutPolygon_NextPoint extends
 		CutPolygon_Default {
-	    // -------------------------------------------------------
-	    // Member methods.
-	    //
 
 	    private CutPolygon_NextPoint(String name, int id) {
 		super(name, id);
@@ -387,7 +335,7 @@ public final class CutPolygonCADToolContext extends statemap.FSMContext {
 	    @Override
 	    protected void Entry(CutPolygonCADToolContext context) {
 
-		CutPolygonCADTool tool = context.getOwner();
+		CutRedigitalizeCommons tool = context.getOwner();
 		tool.setDescription(new String[] { "cancel", "terminate",
 			"change_base_geom" });
 		boolean deleteButton3 = CADStatus.getCADStatus()
@@ -448,7 +396,7 @@ public final class CutPolygonCADToolContext extends statemap.FSMContext {
 	    @Override
 	    protected void addPoint(CutPolygonCADToolContext context,
 		    double pointX, double pointY, InputEvent event) {
-		CutPolygonCADTool ctxt = context.getOwner();
+		CutRedigitalizeCommons ctxt = context.getOwner();
 
 		CutPolygonCADToolState endState = context.getState();
 
@@ -491,14 +439,6 @@ public final class CutPolygonCADToolContext extends statemap.FSMContext {
 
 		return;
 	    }
-
-	    // -------------------------------------------------------
-	    // Member data.
-	    //
 	}
-
-	// -----------------------------------------------------------
-	// Member data.
-	//
     }
 }

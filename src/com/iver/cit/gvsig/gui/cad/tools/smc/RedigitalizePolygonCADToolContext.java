@@ -28,6 +28,7 @@ import java.awt.event.InputEvent;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.gui.cad.CADStatus;
+import com.iver.cit.gvsig.gui.cad.tools.CutRedigitalizeCommons;
 import com.iver.cit.gvsig.gui.cad.tools.RedigitalizePolygonCADTool;
 
 /**
@@ -175,7 +176,7 @@ public final class RedigitalizePolygonCADToolContext extends
 	@Override
 	protected void addPoint(RedigitalizePolygonCADToolContext context,
 		double pointX, double pointY, InputEvent event) {
-	    RedigitalizePolygonCADTool ctxt = context.getOwner();
+	    CutRedigitalizeCommons ctxt = context.getOwner();
 
 	    boolean loopbackFlag = context.getState().getName()
 		    .equals(RedigitalizePolygon.FirstPoint.getName());
@@ -203,7 +204,7 @@ public final class RedigitalizePolygonCADToolContext extends
 	@Override
 	protected void removePoint(RedigitalizePolygonCADToolContext context,
 		InputEvent event, int numPoints) {
-	    RedigitalizePolygonCADTool ctxt = context.getOwner();
+	    CutRedigitalizeCommons ctxt = context.getOwner();
 
 	    boolean loopbackFlag = context.getState().getName()
 		    .equals(RedigitalizePolygon.FirstPoint.getName());
@@ -230,7 +231,7 @@ public final class RedigitalizePolygonCADToolContext extends
 	@Override
 	protected void addOption(RedigitalizePolygonCADToolContext context,
 		String s) {
-	    RedigitalizePolygonCADTool ctxt = context.getOwner();
+	    CutRedigitalizeCommons ctxt = context.getOwner();
 
 	    if (s.equals("C") || s.equals("c")
 		    || s.equals(PluginServices.getText(this, "cancel"))) {
@@ -283,7 +284,7 @@ public final class RedigitalizePolygonCADToolContext extends
 
 	    @Override
 	    protected void Entry(RedigitalizePolygonCADToolContext context) {
-		RedigitalizePolygonCADTool ctxt = context.getOwner();
+		CutRedigitalizeCommons ctxt = context.getOwner();
 
 		ctxt.setQuestion(PluginServices.getText(this,
 			"redigitaliza_insert_first_point"));
@@ -294,7 +295,7 @@ public final class RedigitalizePolygonCADToolContext extends
 	    @Override
 	    protected void addPoint(RedigitalizePolygonCADToolContext context,
 		    double pointX, double pointY, InputEvent event) {
-		RedigitalizePolygonCADTool ctxt = context.getOwner();
+		CutRedigitalizeCommons ctxt = context.getOwner();
 
 		if (ctxt.pointInsideFeature(pointX, pointY)) {
 
@@ -349,14 +350,14 @@ public final class RedigitalizePolygonCADToolContext extends
 
 	    @Override
 	    protected void Entry(RedigitalizePolygonCADToolContext context) {
-		RedigitalizePolygonCADTool ctxt = context.getOwner();
+		CutRedigitalizeCommons ctxt = context.getOwner();
 		ctxt.setDescription(new String[] { "cancel", "removePoint" });
 	    }
 
 	    @Override
 	    protected void addPoint(RedigitalizePolygonCADToolContext context,
 		    double pointX, double pointY, InputEvent event) {
-		RedigitalizePolygonCADTool ctxt = context.getOwner();
+		CutRedigitalizeCommons ctxt = context.getOwner();
 
 		if (ctxt.secondPointInsideFeature(pointX, pointY)) {
 
@@ -406,7 +407,7 @@ public final class RedigitalizePolygonCADToolContext extends
 	    protected void removePoint(
 		    RedigitalizePolygonCADToolContext context,
 		    InputEvent event, int numPoints) {
-		RedigitalizePolygonCADTool ctxt = context.getOwner();
+		CutRedigitalizeCommons ctxt = context.getOwner();
 
 		(context.getState()).Exit(context);
 		context.clearState();
@@ -481,7 +482,7 @@ public final class RedigitalizePolygonCADToolContext extends
 		    context.clearState();
 
 		    try {
-			ctxt.changesPolygonPart();
+			ctxt.changePieceOfGeometry();
 		    } finally {
 			context.setState(endState);
 		    }
@@ -494,7 +495,7 @@ public final class RedigitalizePolygonCADToolContext extends
 	    @Override
 	    protected void addPoint(RedigitalizePolygonCADToolContext context,
 		    double pointX, double pointY, InputEvent event) {
-		RedigitalizePolygonCADTool ctxt = context.getOwner();
+		CutRedigitalizeCommons ctxt = context.getOwner();
 
 		RedigitalizePolygonCADToolState endState = context.getState();
 
@@ -520,7 +521,7 @@ public final class RedigitalizePolygonCADToolContext extends
 	    protected void removePoint(
 		    RedigitalizePolygonCADToolContext context,
 		    InputEvent event, int numPoints) {
-		RedigitalizePolygonCADTool ctxt = context.getOwner();
+		CutRedigitalizeCommons ctxt = context.getOwner();
 
 		if (numPoints > 0) {
 		    RedigitalizePolygonCADToolState endState = context

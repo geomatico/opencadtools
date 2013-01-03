@@ -133,7 +133,7 @@ public class CADToolAdapter extends Behavior {
      * @see #getCadTool()
      * @see #getCADTool(String)
      */
-    private static HashMap namesCadTools = new HashMap();
+    private static HashMap<String, CADTool> namesCadTools = new HashMap<String, CADTool>();
 
     /**
      * Reference to the object used to manage the edition of the layers of the
@@ -338,8 +338,9 @@ public class CADToolAdapter extends Behavior {
 	 * getGrid().drawGrid(g);
 	 */
 	super.paintComponent(g);
-	if (CADExtension.getCADToolAdapter() != this)
+	if (CADExtension.getCADToolAdapter() != this) {
 	    return;
+	}
 	if (adjustedPoint != null) {
 	    Point2D p = null;
 	    if (mapAdjustedPoint != null) {
@@ -515,13 +516,15 @@ public class CADToolAdapter extends Behavior {
     private double adjustToHandler(Point2D point,
 	    Point2D mapHandlerAdjustedPoint) {
 
-	if (!isRefentEnabled())
+	if (!isRefentEnabled()) {
 	    return Double.MAX_VALUE;
+	}
 
 	ILayerEdited aux = CADExtension.getEditionManager()
 		.getActiveLayerEdited();
-	if (!(aux instanceof VectorialLayerEdited))
+	if (!(aux instanceof VectorialLayerEdited)) {
 	    return Double.MAX_VALUE;
+	}
 	VectorialLayerEdited vle = (VectorialLayerEdited) aux;
 
 	ArrayList snappers = SnapConfigPage.getActivesSnappers();
@@ -604,8 +607,9 @@ public class CADToolAdapter extends Behavior {
 				// encontremos un snapper mejor)
 				// TODO : revisar si es > o <
 				if (theSnapper.getPriority() > usedSnap
-					.getPriority())
+					.getPriority()) {
 				    break;
+				}
 			    }
 			    // SnappingVisitor snapVisitor = null;
 			    Point2D theSnappedPoint = null;
@@ -1023,15 +1027,11 @@ public class CADToolAdapter extends Behavior {
      */
     public void configureMenu() {
 	String[] desc = ((CADTool) cadToolStack.peek()).getDescriptions();
-	// String[] labels = ((CADTool)
-	// cadToolStack.peek()).getCurrentTransitions();
 	CADExtension.clearMenu();
-
 	for (int i = 0; i < desc.length; i++) {
 	    if (desc[i] != null) {
 		CADExtension
-			.addMenuEntry(PluginServices.getText(this, desc[i]));// ,
-		// labels[i]);
+			.addMenuEntry(PluginServices.getText(this, desc[i]));
 	    }
 	}
 
@@ -1328,8 +1328,9 @@ public class CADToolAdapter extends Behavior {
      * @see #setCadTool(CADTool)
      */
     public CADTool getCadTool() {
-	if (cadToolStack.isEmpty())
+	if (cadToolStack.isEmpty()) {
 	    return null;
+	}
 	return (CADTool) cadToolStack.peek();
     }
 
@@ -1443,8 +1444,9 @@ public class CADToolAdapter extends Behavior {
     public void delete() {
 	ILayerEdited aux = CADExtension.getEditionManager()
 		.getActiveLayerEdited();
-	if (!(aux instanceof VectorialLayerEdited))
+	if (!(aux instanceof VectorialLayerEdited)) {
 	    return;
+	}
 	VectorialLayerEdited vle = (VectorialLayerEdited) aux;
 	VectorialEditableAdapter vea = vle.getVEA();
 
@@ -1497,8 +1499,9 @@ public class CADToolAdapter extends Behavior {
     public void delete(int index) {
 	ILayerEdited aux = CADExtension.getEditionManager()
 		.getActiveLayerEdited();
-	if (!(aux instanceof VectorialLayerEdited))
+	if (!(aux instanceof VectorialLayerEdited)) {
 	    return;
+	}
 	VectorialLayerEdited vle = (VectorialLayerEdited) aux;
 	VectorialEditableAdapter vea = vle.getVEA();
 	try {
@@ -1715,8 +1718,7 @@ public class CADToolAdapter extends Behavior {
      * @see #getCADTool(String)
      */
     public static CADTool[] getCADTools() {
-	return (CADTool[]) CADToolAdapter.namesCadTools.values().toArray(
-		new CADTool[0]);
+	return CADToolAdapter.namesCadTools.values().toArray(new CADTool[0]);
     }
 
     /**
@@ -1731,7 +1733,7 @@ public class CADToolAdapter extends Behavior {
      * @see #getCADTools()
      */
     public CADTool getCADTool(String text) {
-	CADTool ct = (CADTool) namesCadTools.get(text);
+	CADTool ct = namesCadTools.get(text);
 	return ct;
     }
 

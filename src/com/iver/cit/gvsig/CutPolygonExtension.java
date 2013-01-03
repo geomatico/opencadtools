@@ -27,10 +27,11 @@ import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
-import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 import com.iver.cit.gvsig.gui.cad.tools.CutPolygonCADTool;
-import com.iver.cit.gvsig.project.documents.view.gui.View;
+import com.iver.cit.gvsig.gui.cad.tools.CutRedigitalizeCommons;
+import com.iver.cit.gvsig.layers.ILayerEdited;
 
 /**
  * Extension to cut polygons on edition
@@ -40,75 +41,61 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  * @author Pablo Sanxiao [Cartolab]
  */
 public class CutPolygonExtension extends Extension {
-    private View view;
 
-    private MapControl mapControl;
-    private CutPolygonCADTool polygon;
+    private CutRedigitalizeCommons tool;
 
     private final String iconPath = "images/icons/cortar_area.png";
     private final String iconCode = "edition-geometry-cut-polygon";
-    private final String cadToolCode = "_cut_polygon";
+    private final String toolCode = "_cut_polygon";
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#initialize()
-     */
     @Override
     public void initialize() {
-	polygon = new CutPolygonCADTool();
-	CADExtension.addCADTool(cadToolCode, polygon);
+	tool = new CutPolygonCADTool();
+	CADToolAdapter.addCADTool(toolCode, tool);
 	registerIcon();
-    }
-
-    /**
-     * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
-     */
-    @Override
-    public void execute(String s) {
-	CADExtension.initFocus();
-	if (s.equals(cadToolCode)) {
-	    CADExtension.setCADTool(cadToolCode, true);
-	    CADExtension.getEditionManager().setMapControl(mapControl);
-	}
-	CADExtension.getCADToolAdapter().configureMenu();
-    }
-
-    /**
-     * @see com.iver.andami.plugins.IExtension#isEnabled()
-     */
-    @Override
-    public boolean isEnabled() {
-
-	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-	    view = (View) PluginServices.getMDIManager().getActiveWindow();
-	    mapControl = view.getMapControl();
-	    if (CADExtension.getEditionManager().getActiveLayerEdited() == null)
-		return false;
-	    FLyrVect lv = (FLyrVect) CADExtension.getEditionManager()
-		    .getActiveLayerEdited().getLayer();
-
-	    try {
-		if (polygon.isApplicable(lv.getShapeType()))
-		    return true;
-	    } catch (ReadDriverException e) {
-		NotificationManager.addError(e.getMessage(), e);
-	    }
-	}
-
-	return false;
-    }
-
-    /**
-     * @see com.iver.andami.plugins.IExtension#isVisible()
-     */
-    @Override
-    public boolean isVisible() {
-	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
-	    return true;
-	return false;
     }
 
     private void registerIcon() {
 	PluginServices.getIconTheme().registerDefault(iconCode,
 		this.getClass().getClassLoader().getResource(iconPath));
     }
+
+    @Override
+    public boolean isVisible() {
+	return EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE;
+    }
+
+    @Override
+    public boolean isEnabled() {
+
+	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
+
+	    ILayerEdited iLayerEdited = CADExtension.getEditionManager()
+		    .getActiveLayerEdited();
+	    if (iLayerEdited != null) {
+
+		FLyrVect lv = (FLyrVect) iLayerEdited.getLayer();
+
+		try {
+		    if (tool.isApplicable(lv.getShapeType())) {
+			return true;
+		    }
+		} catch (ReadDriverException e) {
+		    NotificationManager.addError(e.getMessage(), e);
+		}
+	    }
+	}
+
+	return false;
+    }
+
+    @Override
+    public void execute(String s) {
+	CADExtension.initFocus();
+	if (s.equals(toolCode)) {
+	    CADExtension.setCADTool(toolCode, true);
+	}
+	CADExtension.getCADToolAdapter().configureMenu();
+    }
+
 }

@@ -29,6 +29,7 @@ import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.gui.cad.tools.CutRedigitalizeCommons;
 import com.iver.cit.gvsig.gui.cad.tools.RedigitalizePolygonCADTool;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 
@@ -46,7 +47,7 @@ public class RedigitalizePolygonExtension extends Extension {
     private View view;
 
     private MapControl mapControl;
-    private RedigitalizePolygonCADTool polygon;
+    private CutRedigitalizeCommons polygon;
 
     /**
      * @see com.iver.andami.plugins.IExtension#initialize()
