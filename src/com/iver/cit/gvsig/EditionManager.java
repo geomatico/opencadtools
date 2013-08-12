@@ -191,7 +191,7 @@ public class EditionManager implements LayerListener, LayerCollectionListener {
     public void setMapControl(MapControl mapCtrl) {
 	if (mapCtrl != null) {
 	    this.mapCtrl = mapCtrl;
-	    mapCtrl.getMapContext().getLayers().addLayerListener(this);
+	    // mapCtrl.getMapContext().getLayers().addLayerListener(this);
 	    mapCtrl.getMapContext().getLayers()
 		    .addLayerCollectionListener(this);
 	}

@@ -124,6 +124,7 @@ public class StopEditing extends Extension {
 		    isStop = stopEditing(lv, mapControl);
 		    if (isStop) {
 			lv.removeLayerListener(edMan);
+			// lv.getMapContext().getLayers().removeLayerListener(edMan);
 			if (lv instanceof FLyrAnnotation) {
 			    FLyrAnnotation lva = (FLyrAnnotation) lv;
 			    lva.setMapping(lva.getMapping());
